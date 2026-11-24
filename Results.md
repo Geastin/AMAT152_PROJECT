@@ -1,4 +1,4 @@
-#Results: Minimum Exact Commute Fair
+# Results: Minimum Exact Commute Fair
 
 ## 1. Cost Optimization
 The program was tested to run all possible starting stations to their maximum distance from the starting station, which is the LRT Buendia. Here are the results:
