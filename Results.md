@@ -73,8 +73,8 @@ $$
 The table above shows the constraints on the fares are calculated properly as the fares increases per additional kilometer based on the mode of transportation.
 
 ## 4. Limitations
-a. The program only shoes one optimized results which makes comparing other possible routes found by the algorithm impossible.
-b. The stations are limited to a 64 km distance which lessens the data results
-c. There are only 3 modes of transporation. Other modes of transportation may be added later.
+1. The program only shoes one optimized results which makes comparing other possible routes found by the algorithm impossible.
+2. The stations are limited to a 64 km distance which lessens the data results.
+3. There are only 3 modes of transporation. Other modes of transportation may be added later.
 
 
