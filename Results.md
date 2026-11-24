@@ -7,21 +7,21 @@ The program was tested to find the optimal route by comparing the proposed optim
 
 ### a. Without Student Discount
 | Optimization | Rides | Transfer | Mode | Distance to Switch | Routes | Total Fare | 
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Optimal | 2 | 1 | Jeepney -> Bus | 0 KM -> 13 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 183.40 |
-| Alternative | 2 | 1 | Jeepney -> Bus | 0 KM -> 12 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 184.30 |
-| Alternative | 3 | 2 | Jeepney -> Jeepney -> Bus | 0 KM -> 13 KM -> 18 KM -> 64 KM | UPLB -> Calamba -> Real -> LRT Buendia | PHP 184.90 |
-| Alternative | 2 | 1 |  -> Jeepney -> Bus | 0 KM -> 11 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 185.20 |
-| Worst | 3 | 2 | Jeepney -> Jeepney -> Bus | 0 KM -> 13 KM -> 17 KM -> 64 KM | UPLB -> Calamba -> Real -> LRT Buendia | PHP 185.90 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Optimal | 2 | 1 | Jeepney to Bus | 0 KM to 13 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 183.40 |
+| Alternative | 2 | 1 | Jeepney to Bus | 0 KM to 12 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 184.30 |
+| Alternative | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 18 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 184.90 |
+| Alternative | 2 | 1 |  to Jeepney to Bus | 0 KM to 11 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 185.20 |
+| Worst | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 17 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 185.90 |
 
 ### b. With Student Discount
 | Optimization | Rides | Transfer | Mode | Distance to Switch | Routes | Total Fare | 
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Optimal | 2 | 1 | Jeepney -> Bus | 0 KM -> 13 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 146.72 |
-| Alternative | 2 | 1 | Jeepney -> Bus | 0 KM -> 12 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 147.44 |
-| Alternative | 3 | 2 | Jeepney -> Jeepney -> Bus | 0 KM -> 13 KM -> 18 KM -> 64 KM | UPLB -> Calamba -> Real -> LRT Buendia | PHP 147.92 |
-| Alternative | 2 | 1 |  -> Jeepney -> Bus | 0 KM -> 11 KM -> 64 KM | UPLB -> Calamba -> LRT Buendia | PHP 148.16 |
-| Worst | 3 | 2 | Jeepney -> Jeepney -> Bus | 0 KM -> 13 KM -> 17 KM -> 64 KM | UPLB -> Calamba -> Real -> LRT Buendia | PHP 148.64 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Optimal | 2 | 1 | Jeepney to Bus | 0 KM to 13 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 146.72 |
+| Alternative | 2 | 1 | Jeepney to Bus | 0 KM to 12 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 147.44 |
+| Alternative | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 18 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 147.92 |
+| Alternative | 2 | 1 |  to Jeepney to Bus | 0 KM to 11 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 148.16 |
+| Worst | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 17 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 148.64 |
 
 According to the results, the program was able to find out the most cost efficient traveling routes and the mode of transportation to be used. It was also able to calculate the fare with and without the student discount.
 
