@@ -68,7 +68,7 @@ $$
 | --- | --- | --- | --- | --- | --- |
 | Tricycle | UPLB to Olivarez | KM 1 | PHP 80 | Fixed | N/A |
 | Jeepney | UPLB to Calamba | KM 13 | PHP 14 per 4 KM | PHP 2 per 1 KM | PHP 18 |
-| Bus |  | Olivarez to LRT Buendia | KM 44 | PHP 18 per 5 KM | PHP 2.9 per 1 KM | PHP 113.1 |
+| Bus | Olivarez to LRT Buendia | KM 44 | PHP 18 per 5 KM | PHP 2.9 per 1 KM | PHP 113.1 |
 
 The table above shows the constraints on the fares are calculated properly as the fares increases per additional kilometer based on the mode of transportation.
 
