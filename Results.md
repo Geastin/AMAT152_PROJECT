@@ -1,27 +1,27 @@
 # Results: Minimum Exact Commute Fair
 
 ## 1. Cost Optimization
-The program was tested to run all possible starting stations to their maximum distance from the starting station, which is the LRT Buendia. Here are the results:
+The program was tested to find the optimal route by comparing the proposed optimal route to the alternative routes and the direct route. Here are the results:
+
+### Start station UPLB to end station LRT Buendia
 
 ### a. Without Student Discount
-| Starting Station | Mode | Routes | Total Kilometers | Fare | Total Rides | Student |
+| Optimization | Rides | Transfer | Mode | Distance to Switch | Routes | Total Fare | 
 | --- | --- | --- | --- | --- | --- | --- |
-| UPLB | Jeepney & Bus | UPLB to Calamba, Olivarez to LRT Buendia | KM 64 | PHP 183.40 | 2 | No |
-| Olivarez | Jeepney & Bus | UPLB to Calamba, Olivarez to LRT Buendia | KM 63 | PHP 181.40 | 2 | No |
-| Calamba | Bus | Olivarez to LRT Buendia | KM 51 | PHP 151.40 | 1 | No |
-| Real | Bus | Olivarez to LRT Buendia | KM 46 | PHP 136.90 | 1 | No |
-| Alabang | N/A | N/A | N/A | N/A | N/A | N/A |
-| Magallanes | Bus | Olivarez to LRT Buendia | KM 2 | PHP 18.0 | 1 | No |
+| Optimal | 2 | 1 | Jeepney to Bus | 0 KM to 13 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 183.40 |
+| Alternative | 2 | 1 | Jeepney to Bus | 0 KM to 12 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 184.30 |
+| Alternative | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 18 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 184.90 |
+| Alternative | 2 | 1 |  to Jeepney to Bus | 0 KM to 11 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 185.20 |
+| Worst | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 17 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 185.90 |
 
 ### b. With Student Discount
-| Starting Station | Mode | Routes | Total Kilometers | Fare | Total Rides | Student |
+| Optimization | Rides | Transfer | Mode | Distance to Switch | Routes | Total Fare | 
 | --- | --- | --- | --- | --- | --- | --- |
-| UPLB | Jeepney & Bus | UPLB to Calamba, Olivarez to LRT Buendia | KM 64 | PHP 146.72 | 2 | Yes |
-| Olivarez | Jeepney & Bus | UPLB to Calamba, Olivarez to LRT Buendia | KM 63 | PHP 145.12 | 2 | Yes |
-| Calamba | Bus | Olivarez to LRT Buendia | KM 51 | PHP 121.12 | 1 | Yes |
-| Real | Bus | Olivarez to LRT Buendia | KM 46 | PHP 109.52| 1 | Yes |
-| Alabang | N/A | N/A | N/A | N/A | N/A | N/A |
-| Magallanes | Bus | Olivarez to LRT Buendia | KM 2 | PHP 14.40 | 1 | Yes |
+| Optimal | 2 | 1 | Jeepney to Bus | 0 KM to 13 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 146.72 |
+| Alternative | 2 | 1 | Jeepney to Bus | 0 KM to 12 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 147.44 |
+| Alternative | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 18 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 147.92 |
+| Alternative | 2 | 1 |  to Jeepney to Bus | 0 KM to 11 KM to 64 KM | UPLB to Calamba to LRT Buendia | PHP 148.16 |
+| Worst | 3 | 2 | Jeepney to Jeepney to Bus | 0 KM to 13 KM to 17 KM to 64 KM | UPLB to Calamba to Real to LRT Buendia | PHP 148.64 |
 
 According to the results, the program was able to find out the most cost efficient traveling routes and the mode of transportation to be used. It was also able to calculate the fare with and without the student discount.
 
@@ -31,7 +31,7 @@ The program was analyzed to find out which mode of transportation it uses most i
 | Mode | Times used per Travel |
 | --- | --- |
 | Tricycle | 0 |
-| Jeepney | 2 | 
+| Jeepney | 7 | 
 | Bus | 5 | 
 
 After reviewing the results, the bus was the most used mode of transportation used by the algorithm.

@@ -227,6 +227,133 @@ def findCheapestCommute(startKm, endKm, isStudent=False):
 
     return bestCost[endKm][0], segments, None
 
+# Best partial paths are collected and limited to 3
+def findOptimizedAlternatives(startKm, endKm, isStudent=False, limit = 5):
+    endpointError = checkEndpointValidity(startKm, endKm)
+    if endpointError is not None:
+        return [], endpointError
+
+    graph = buildCorridorGraph(startKm, endKm, isStudent)
+    nodes = sorted(graph)    
+    states = {(startKm, None): [(Decimal("0"), 0, [])]}
+
+    for currentKm in nodes:
+        currentStates = [
+            (stateKey, paths)
+            for stateKey, paths in list(states.items())
+            if stateKey[0] == currentKm
+        ]
+
+        for (stateKm, previousRoute), paths in currentStates:
+            for currentFare, currentRides, segments in paths:
+                for nextKm, edgeFare, route in graph[currentKm]:
+                    # Avoid counting same-route split as a transfer.
+                    if previousRoute == route["name"]:
+                        continue
+
+                    newFare = currentFare + edgeFare
+                    newRides = currentRides + 1
+                    newSegment = {
+                        "mode": route["mode"],
+                        "routeName": route["name"],
+                        "startKm": currentKm,
+                        "endKm": nextKm,
+                        "fare": edgeFare,
+                    }
+                    newSegments = segments + [newSegment]
+                    nextState = (nextKm, route["name"])
+
+                    candidates = states.setdefault(nextState, [])
+                    candidates.append((newFare, newRides, newSegments))
+                    candidates.sort(key=lambda item: (item[0], item[1]))
+
+                    # Keeps the best state path 
+                    del candidates[limit:]
+
+    results = []
+    for (km, _), paths in states.items():
+        if km == endKm:
+            for fare, rides, segments in paths:
+                results.append({
+                    "totalFare": fare,
+                    "segments": segments,
+                    "totalRides": rides,
+                })
+
+    results.sort(key=lambda item: (item["totalFare"], item["totalRides"]))
+
+    # Remove any exact duplicate routes or sequences
+    uniqueResults = []
+    seen = set()
+    for result in results:
+        signature = tuple(
+            (
+                segment["routeName"],
+                segment["startKm"],
+                segment["endKm"],
+            )
+            for segment in result["segments"]
+        )
+        if signature in seen:
+            continue
+        seen.add(signature)
+        uniqueResults.append(result)
+        if len(uniqueResults) == limit:
+            break
+
+    return uniqueResults, None
+
+# Gets the direct route from available routes
+def findUnoptimizedDirectRoute(startKm, endKm, isStudent=False):
+    graph = buildCorridorGraph(startKm, endKm, isStudent)
+
+    for nextKm, fare, route in graph.get(startKm, []):
+        if nextKm == endKm:
+            segment = {
+                "mode": route["mode"],
+                "routeName": route["name"],
+                "startKm": startKm,
+                "endKm": endKm,
+                "fare": fare,
+            }
+            return fare, segment
+
+    return None, None
+
+def printRouteDetails(segments):
+    for idx, seg in enumerate(segments, start=1):
+        distance = seg["endKm"] - seg["startKm"]
+        print(
+            f"  {idx}. [{seg['mode']}] {seg['routeName']} | "
+            f"{formatStop(seg['startKm'])} -> {formatStop(seg['endKm'])} "
+            f"(Distance: {formatKm(distance)} km) | "
+            f"Segment Fare: {formatPhp(seg['fare'])}"
+        )
+
+def printComparison(optimizedFare, baselineFare):
+    print("\n===== FARE COMPARISON =====")
+    print(f"Most Optimized Fare: {formatPhp(optimizedFare)}")
+
+    if baselineFare is None:
+        print("Unoptimized Direct Route: Not available for this trip.")
+        print("Savings: Cannot be calculated.")
+        return
+
+    savings = baselineFare - optimizedFare
+    print(f"Unoptimized Direct Fare: {formatPhp(baselineFare)}")
+
+    if savings > 0:
+        percentage = (savings / baselineFare) * Decimal("100")
+        print(f"Fare Savings: {formatPhp(savings)} ({percentage:.2f}%)")
+    elif savings == 0:
+        print("Fare Savings: PHP 0.00 (both fares are equal)")
+    else:
+        extra = abs(savings)
+        percentage = (extra / baselineFare) * Decimal("100")
+        print(
+            f"The optimized route costs {formatPhp(extra)} more "
+            f"({percentage:.2f}%) than the direct-route baseline."
+        )
 
 def formatKm(km):
     text = format(km, "f")
@@ -301,30 +428,75 @@ def main():
         print("\nInput error: Travel is strictly one-way, so start_km must be less than end_km.")
         return
 
-    totalFare, segments, errorMessage = findCheapestCommute(startKm, endKm, isStudent)
-
-    if errorMessage is not None or totalFare is None or segments is None:
-        print(f"\n{errorMessage}")
+    endpointError = checkEndpointValidity(startKm, endKm)
+    if endpointError is not None:
+        print(f"\n{endpointError}")
         return
 
     passengerLabel = "Student (20% discount on Jeepney & Bus)" if isStudent else "Regular"
 
-    print("\n===== OPTIMIZATION RESULTS =====")
+    # Display the five cheapest distinct routes: best route + four alternatives.
+    optimizedResults, errorMessage = findOptimizedAlternatives(
+        startKm, endKm, isStudent, limit=5
+    )
+
+    if errorMessage is not None:
+        print(f"\n{errorMessage}")
+        return
+
+    if not optimizedResults:
+        print("\nNo valid route was found for this trip.")
+        return
+
+    baselineFare, baselineSegment = findUnoptimizedDirectRoute(
+        startKm, endKm, isStudent
+    )
+
+    print("\n===== COMMUTE RESULTS =====")
     print(f"Trip: {formatStop(startKm)} -> {formatStop(endKm)}")
     print(f"Passenger Type: {passengerLabel}")
-    print(f"Minimum Total Fare: {formatPhp(totalFare)}")
-    print(f"Total Rides: {len(segments)} (Transfers: {len(segments) - 1})")
-    print("\nStep-by-Step Route:")
 
-    for idx, seg in enumerate(segments, start=1):
-        distance = seg["endKm"] - seg["startKm"]
+    print("\n===== OPTIMIZED RESULTS (LOWEST FARE FIRST) =====")
+    for idx, result in enumerate(optimizedResults, start=1):
+        if idx == 1:
+            resultLabel = "MOST OPTIMIZED RESULT"
+        else:
+            resultLabel = f"ALTERNATIVE OPTIMIZED RESULT #{idx - 1}"
+
+        print(f"\n{idx}. {resultLabel}")
+        print(f"   Total Fare: {formatPhp(result['totalFare'])}")
         print(
-            f"  {idx}. [{seg['mode']}] {seg['routeName']} | "
-            f"{formatStop(seg['startKm'])} -> {formatStop(seg['endKm'])} "
-            f"(Distance: {formatKm(distance)} km) | "
-            f"Segment Fare: {formatPhp(seg['fare'])}"
+            f"   Total Rides: {result['totalRides']} "
+            f"(Transfers: {result['totalRides'] - 1})"
         )
+        print("   Step-by-Step Route:")
+        printRouteDetails(result["segments"])
 
+    print("\n===== UNOPTIMIZED BASELINE =====")
+    print("Baseline definition: first eligible direct route in AVAILABLE_ROUTES.")
+    if baselineSegment is None:
+        print("No direct route is available between the selected points.")
+    else:
+        print(f"Route: {baselineSegment['routeName']}")
+        print(f"Mode: {baselineSegment['mode']}")
+        print(f"Total Fare: {formatPhp(baselineFare)}")
+        print("Step-by-Step Route:")
+        printRouteDetails([baselineSegment])
+
+    printComparison(optimizedResults[0]["totalFare"], baselineFare)
+
+    if len(optimizedResults) == 1:
+        print(
+            "\nNote: Only one valid route was found. "
+            "There are no additional optimized alternatives for this trip."
+        )
+    elif len(optimizedResults) == 5:
+        print("\nShowing the five cheapest distinct valid routes.")
+    else:
+        print(
+            f"\nShowing all {len(optimizedResults)} valid route(s) found "
+            "within the requested result limit."
+        )
 
 if __name__ == "__main__":
     main()
